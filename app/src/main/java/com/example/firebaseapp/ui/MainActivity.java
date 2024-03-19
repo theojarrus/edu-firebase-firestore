@@ -5,8 +5,8 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.firebaseapp.domain.UserRepository;
 import com.example.firebaseapp.databinding.ActivityMainBinding;
+import com.example.firebaseapp.domain.UserRepository;
 import com.example.firebaseapp.model.Note;
 import com.example.firebaseapp.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 });
 
-        // Полная обработка различных состояний
+        // Подписка на изменения документа и полная обработка различных состояний
         firestore.collection("users")
                 .document("vcr5Aw9onrDwf4bn2hsH")
                 .addSnapshotListener((value, error) -> {
@@ -125,11 +125,11 @@ public class MainActivity extends AppCompatActivity {
             binding.textView.setText(user.toString());
         });
 
-        // Дополнительно (опционально) можно добавить обработку ошибки, если возвращать Task
+        // Вынос логики в репозиторий с обработкой ошибок
         UserRepository.getUserById("A9mkkauBZbZ3e92mys7y", user -> {
             binding.textView.setText(user.toString());
-        }).addOnFailureListener(e -> {
-            // Обработка ошибки
+        }, error -> {
+            binding.textView.setText(error.name());
         });
     }
 }
